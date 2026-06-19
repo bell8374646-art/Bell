@@ -50,7 +50,7 @@ async function main() {
     { question: 'What is the contract address of BELL?', answer: 'The official contract address is 7xKX1v2B8kFqE2pAd8Ad1T2P6Sj4b3g9B1N8xQ2yZ1r9 (mock). Never send funds directly to this address.', category: 'TECHNICAL', order: 2 },
     { question: 'Which wallet should I use?', answer: 'We support Solana-compatible wallets such as Phantom, Solflare, or backpack.', category: 'TECHNICAL', order: 3 },
     { question: 'Is the liquidity locked?', answer: 'Yes, 100% of the initial presale liquidity is locked for a duration of 3 years to prevent rug pulls and build investor trust.', category: 'SECURITY', order: 4 },
-    { question: 'What is the total supply?', answer: 'The total supply is fixed at 1,000,000,000 BELL coins. No additional coins can ever be minted.', category: 'TOKENOMICS', order: 5 },
+    { question: 'What is the total supply?', answer: 'The total supply is fixed at 21,000,000 BELL coins. No additional coins can ever be minted.', category: 'TOKENOMICS', order: 5 },
     { question: 'How can I buy Bell Coin?', answer: 'You can buy Bell Coin on decentralized exchanges like Raydium or Jupiter, or directly from our official platform using your Solana wallet.', category: 'BUYING', order: 6 },
     { question: 'What is the transaction slippage rate?', answer: 'We recommend setting your slippage tolerance to 0.5% - 1% on DEX platforms.', category: 'BUYING', order: 7 },
     { question: 'Is the team fully verified?', answer: 'Yes, the core founding team has passed rigorous KYC verification and our smart contracts are fully audited.', category: 'SECURITY', order: 8 },
@@ -124,7 +124,7 @@ async function main() {
       slug: 'tokenomics',
       title: 'Tokenomics Settings',
       content: JSON.stringify({
-        totalSupply: 1000000000,
+        totalSupply: 21000000,
         allocation: [
           { label: 'Presale / Public Sale', value: 40, color: '#D4AF37' },
           { label: 'Liquidity Pool Lock', value: 30, color: '#F5E6A3' },

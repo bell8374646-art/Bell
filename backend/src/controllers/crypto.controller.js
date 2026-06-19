@@ -79,7 +79,7 @@ export async function getCryptoSettings(req, res) {
     // Append live price feed
     const livePrice = await fetchLivePrice(settings);
     formatted.livePrice = livePrice;
-    formatted.marketCap = livePrice * 1000000000; // Mock total supply 1 Billion
+    formatted.marketCap = livePrice * 21000000; // Mock total supply 21 Million
 
     return res.status(200).json({ success: true, data: formatted, error: null });
   } catch (err) {

@@ -48,7 +48,7 @@ export default function WhitepaperPage() {
     {
       id: 'token-allocation',
       title: '4. Allocation & Governance',
-      content: 'A total fixed supply of 1,000,000,000 BELL is minted. 40% goes to public presale, 30% permanently locked in Raydium liquidity pools, 15% reserve staking yields, 10% ecosystem marketing, and 5% vested core developer pools. Governance votes are settled based on holding multipliers over time.',
+      content: 'A total fixed supply of 21,000,000 BELL is minted. 40% goes to public presale, 30% permanently locked in Raydium liquidity pools, 15% reserve staking yields, 10% ecosystem marketing, and 5% vested core developer pools. Governance votes are settled based on holding multipliers over time.',
     },
     {
       id: 'security-matrix',

@@ -269,7 +269,7 @@ export default function HomePage() {
               Deflationary & Audited Token Allocation
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              We hold transparency as our highest brand pillar. Total supply is capped at 1,000,000,000 BELL. 100% of team tokens are vested linearly over 36 months, and our burn mechanism removes 0.5% of transaction volume permanently.
+              We hold transparency as our highest brand pillar. Total supply is capped at 21,000,000 BELL. 100% of team tokens are vested linearly over 36 months, and our burn mechanism removes 0.5% of transaction volume permanently.
             </p>
             <div className="flex flex-col gap-3">
               {['40% Presale allocations for community', '30% Liquidity pool locked for 3 years', '0.5% automated burn on transfers'].map((item, i) => (

@@ -29,7 +29,7 @@ export default function TokenomicsPage() {
   });
 
   const tokenomicsData = cmsTokenomics ? JSON.parse(cmsTokenomics.content) : {
-    totalSupply: 1000000000,
+    totalSupply: 21000000,
     allocation: [
       { label: 'Presale / Public Sale', value: 40, color: '#D4AF37' },
       { label: 'Liquidity Pool Lock', value: 30, color: '#F5E6A3' },
@@ -43,7 +43,7 @@ export default function TokenomicsPage() {
   // Supply counter animation on page load
   useEffect(() => {
     let start = 0;
-    const end = tokenomicsData.totalSupply || 1000000000;
+    const end = tokenomicsData.totalSupply || 21000000;
     const duration = 1500; // 1.5s
     const increment = Math.ceil(end / (duration / 16)); // ~60fps
     
