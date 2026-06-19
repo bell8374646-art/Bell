@@ -16,7 +16,6 @@ export default function Header() {
     { name: 'About', path: '/about' },
     { name: 'Tokenomics', path: '/tokenomics' },
     { name: 'Roadmap', path: '/roadmap' },
-    { name: 'Chart', path: '/chart' },
     { name: 'Whitepaper', path: '/whitepaper' },
     { name: 'How to Buy', path: '/how-to-buy' },
     { name: 'Team', path: '/team' },
