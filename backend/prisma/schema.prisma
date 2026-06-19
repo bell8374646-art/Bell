@@ -1,0 +1,203 @@
+// schema.prisma
+// Database schema configuration for Bell Coin Platform
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             String      @id @default(uuid())
+  email          String      @unique
+  password       String
+  role           String      // SUPER_ADMIN (4), ADMIN (3), EDITOR (2), MODERATOR (1)
+  totpSecret     String?
+  totpEnabled    Boolean     @default(false)
+  loginAttempts  Int         @default(0)
+  lockedUntil    DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  auditLogs      AuditLog[]
+  blogPosts      BlogPost[]
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  details   String
+  ip        String
+  timestamp DateTime @default(now())
+}
+
+model PageContent {
+  id          String   @id @default(uuid())
+  slug        String   @unique // home, about, tokenomics, roadmap, faq, etc.
+  title       String
+  content     String   // JSON formatted string containing section layouts
+  isPublished Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+}
+
+model MediaFile {
+  id          String   @id @default(uuid())
+  url         String
+  key         String   @unique
+  name        String
+  size        Int
+  mimeType    String
+  folder      String   @default("general")
+  createdAt   DateTime @default(now())
+}
+
+model BlogPost {
+  id              String        @id @default(uuid())
+  slug            String        @unique
+  title           String
+  content         String        // TipTap editor rich text
+  excerpt         String?
+  metaTitle       String?
+  metaDesc        String?
+  ogImage         String?
+  canonicalUrl    String?
+  focusKeyword    String?
+  status          String        @default("DRAFT") // DRAFT, SCHEDULED, PUBLISHED, ARCHIVED
+  publishAt       DateTime      @default(now())
+  readingTime     Int           @default(1)
+  featured        Boolean       @default(false)
+  categoryId      String?
+  category        BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  authorId        String
+  author          User          @relation(fields: [authorId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model BlogCategory {
+  id        String     @id @default(uuid())
+  name      String
+  slug      String     @unique
+  posts     BlogPost[]
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  name      String
+  title     String
+  bio       String
+  photoUrl  String?
+  linkedin  String?
+  twitter   String?
+  telegram  String?
+  order     Int      @default(0)
+  type      String   @default("CORE") // CORE, ADVISOR
+  createdAt DateTime @default(now())
+}
+
+model RoadmapPhase {
+  id         String   @id @default(uuid())
+  title      String
+  date       String
+  order      Int      @default(0)
+  progress   Int      @default(0) // 0 to 100
+  status     String   @default("UPCOMING") // COMPLETED, IN_PROGRESS, UPCOMING
+  milestones String   // JSON array of strings: '["Milestone 1", "Milestone 2"]'
+  createdAt  DateTime @default(now())
+}
+
+model FaqItem {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  category  String   @default("GENERAL") // GENERAL, TOKENOMICS, TECHNICAL, BUYING, SECURITY
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Announcement {
+  id                String    @id @default(uuid())
+  type              String    @default("BANNER") // BANNER, POPUP, EMERGENCY, LAUNCH
+  title             String
+  content           String
+  ctaText           String?
+  ctaUrl            String?
+  color             String    @default("#D4AF37")
+  active            Boolean   @default(false)
+  startsAt          DateTime?
+  endsAt            DateTime?
+  cookieDismissDays Int       @default(7)
+  pageTargeting     String    @default("*") // *, /about, /tokenomics
+  createdAt         DateTime  @default(now())
+}
+
+model NewsletterSubscriber {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  firstName         String?
+  source            String   @default("footer")
+  confirmed         Boolean  @default(false)
+  confirmationToken String?
+  createdAt         DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  ip        String
+  status    String   @default("NEW") // NEW, IN_PROGRESS, RESOLVED, ARCHIVED
+  starred   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SeoSetting {
+  id               String @id @default(uuid())
+  key              String @unique @default("global") // global, or page slug overrides
+  siteName         String
+  description      String
+  defaultOgImage   String?
+  canonicalDomain  String
+  verificationTags String // JSON string e.g. '{ "google": "...", "bing": "..." }'
+  jsonLd           String // JSON string pre-filled templates
+}
+
+model CryptoSetting {
+  id                     String  @id @default(uuid())
+  tokenName              String  @default("Bell Coin")
+  symbol                 String  @default("BELL")
+  decimals               Int     @default(18)
+  contractAddress        String  @default("0x0000000000000000000000000000000000000000")
+  network                String  @default("Ethereum Mainnet")
+  logoUrl                String?
+  coingeckoId            String?
+  cmcId                  String?
+  buyNowUrl              String  @default("https://uniswap.org")
+  exchangeLinks          String  // JSON string array of { name, pair, url }
+  walletConnectProjectId String?
+  supportedWallets       String  // JSON string array of strings
+  rpcEndpoints           String  // JSON string array of { network, url }
+  priceSource            String  @default("MANUAL") // COINGECKO, COINMARKETCAP, MANUAL
+  manualPrice            Float   @default(0.01)
+  cacheTtl               Int     @default(60)
+}
+
+model AnalyticsEvent {
+  id           String   @id @default(uuid())
+  eventName    String
+  page         String
+  referrer     String?
+  browser      String?
+  device       String?
+  country      String?
+  sessionToken String?
+  timestamp    DateTime @default(now())
+  metadata     String?  // JSON string
+}

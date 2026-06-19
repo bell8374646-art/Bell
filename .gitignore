@@ -1,0 +1,27 @@
+# Dependency directories
+node/
+node_modules/
+**/node_modules/
+
+# Next.js build output
+.next/
+**/.next/
+
+# Local databases and logs
+*.db
+*.db-journal
+*.log
+logs/
+**/logs/
+
+# Env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env*
+
+# OS files
+.DS_Store
+Thumbs.db
