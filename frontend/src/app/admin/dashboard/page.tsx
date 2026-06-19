@@ -48,6 +48,7 @@ export default function AdminDashboardPage() {
   const [roadmapDate, setRoadmapDate] = useState('');
   const [roadmapProgress, setRoadmapProgress] = useState(0);
   const [roadmapStatus, setRoadmapStatus] = useState('UPCOMING');
+  const [roadmapOrder, setRoadmapOrder] = useState(1);
   const [roadmapMilestones, setRoadmapMilestones] = useState<string[]>([]);
   const [newMilestoneText, setNewMilestoneText] = useState('');
   const [isRoadmapFormOpen, setIsRoadmapFormOpen] = useState(false);
@@ -261,6 +262,7 @@ export default function AdminDashboardPage() {
     setRoadmapDate('');
     setRoadmapProgress(0);
     setRoadmapStatus('UPCOMING');
+    setRoadmapOrder(1);
     setRoadmapMilestones([]);
     setNewMilestoneText('');
     setIsRoadmapFormOpen(false);
@@ -295,7 +297,7 @@ export default function AdminDashboardPage() {
       progress: Number(roadmapProgress),
       status: roadmapStatus,
       milestones: JSON.stringify(roadmapMilestones),
-      order: 1, // default
+      order: Number(roadmapOrder),
     });
   };
 
@@ -305,6 +307,7 @@ export default function AdminDashboardPage() {
     setRoadmapDate(phase.date);
     setRoadmapProgress(phase.progress);
     setRoadmapStatus(phase.status);
+    setRoadmapOrder(phase.order || 1);
     try {
       setRoadmapMilestones(JSON.parse(phase.milestones));
     } catch (e) {
@@ -892,10 +895,10 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-xs font-semibold text-text-secondary uppercase">
-                        Progress Percentage
+                        Progress %
                       </label>
                       <input
                         type="number"
@@ -920,6 +923,19 @@ export default function AdminDashboardPage() {
                         <option value="IN_PROGRESS">In Progress</option>
                         <option value="COMPLETED">Completed</option>
                       </select>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-semibold text-text-secondary uppercase">
+                        Display Order
+                      </label>
+                      <input
+                        type="number"
+                        required
+                        value={roadmapOrder}
+                        onChange={(e) => setRoadmapOrder(Number(e.target.value))}
+                        min={1}
+                        className="rounded-lg bg-primary-bg/50 border border-accent-gold/15 py-2.5 px-3 text-sm focus:outline-none focus:border-accent-gold/40 font-mono"
+                      />
                     </div>
                   </div>
 
@@ -1015,7 +1031,7 @@ export default function AdminDashboardPage() {
                             {phase.status}
                           </span>
                           <span className="text-[10px] font-mono text-text-secondary/70">
-                            {phase.date} • {phase.progress}% Progress
+                            Order: {phase.order} • {phase.date} • {phase.progress}% Progress
                           </span>
                         </div>
                         <h4 className="font-semibold text-text-primary text-sm">{phase.title}</h4>

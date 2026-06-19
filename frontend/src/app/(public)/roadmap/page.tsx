@@ -1,12 +1,14 @@
-// page.tsx
 'use client';
 
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   IconCircleCheck,
   IconClock,
   IconCalendarEvent,
   IconArrowRight,
+  IconEdit,
 } from '@tabler/icons-react';
 import { publicApi } from '@/utils/api';
 
@@ -21,6 +23,14 @@ interface RoadmapPhase {
 }
 
 export default function RoadmapPage() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('accessToken')) {
+      setIsAdmin(true);
+    }
+  }, []);
+
   // Fetch roadmap phases from API
   const { data: phases, isLoading } = useQuery<RoadmapPhase[]>({
     queryKey: ['roadmapPhases'],
@@ -40,6 +50,21 @@ export default function RoadmapPage() {
           <h1 className="font-display text-3xl md:text-5xl font-extrabold tracking-tight text-text-primary">
             Ecosystem Roadmap
           </h1>
+          {isAdmin && (
+            <Link
+              href="/admin/dashboard"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  // In case we want to navigate directly to the roadmap tab
+                  // We can't set state across page boundaries easily, but it's okay, they'll land on dashboard
+                }
+              }}
+              className="mt-2 mx-auto flex items-center gap-2 rounded-full border border-accent-gold/40 bg-accent-gold/15 px-4 py-1.5 text-xs font-bold text-accent-gold hover:bg-accent-gold hover:text-primary-bg transition-all duration-300 w-fit"
+            >
+              <IconEdit className="h-3.5 w-3.5" />
+              Edit in Admin Panel
+            </Link>
+          )}
           <p className="text-text-secondary max-w-2xl mx-auto leading-relaxed">
             Follow our milestones as we build the premier financial freedom platform for families.
           </p>
