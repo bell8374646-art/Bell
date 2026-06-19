@@ -211,8 +211,8 @@ export default function HomePage() {
           {[
             { label: 'BELL Price', val: isCryptoLoading ? '...' : `$${crypto?.livePrice || '0.0125'}`, icon: IconCoin },
             { label: 'Market Cap', val: isCryptoLoading ? '...' : `$${(crypto?.marketCap || 12500000).toLocaleString()}`, icon: IconTrendingUp },
-            { label: 'Active Holders', val: '1,540 +', icon: IconUsers },
-            { label: '24h Vol (Raydium)', val: '$384,200', icon: IconDeviceAnalytics },
+            { label: 'Active Holders', val: isCryptoLoading ? '...' : `${(crypto?.manualHolders || 1540).toLocaleString()} +`, icon: IconUsers },
+            { label: '24h Vol (Raydium)', val: isCryptoLoading ? '...' : `$${(crypto?.manualVolume || 384200).toLocaleString()}`, icon: IconDeviceAnalytics },
           ].map((stat, i) => (
             <div key={i} className="flex flex-col items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-gold/10 text-accent-gold">

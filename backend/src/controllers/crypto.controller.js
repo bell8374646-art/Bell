@@ -64,6 +64,9 @@ export async function getCryptoSettings(req, res) {
           priceSource: 'MANUAL',
           manualPrice: 0.0125,
           cacheTtl: 60,
+          manualHolders: 1540,
+          manualVolume: 384200,
+          manualMarketCap: 12500000,
         },
       });
     }
@@ -79,7 +82,9 @@ export async function getCryptoSettings(req, res) {
     // Append live price feed
     const livePrice = await fetchLivePrice(settings);
     formatted.livePrice = livePrice;
-    formatted.marketCap = livePrice * 21000000; // Mock total supply 21 Million
+    formatted.marketCap = (settings.manualMarketCap && settings.manualMarketCap > 0)
+      ? settings.manualMarketCap
+      : (livePrice * 21000000); // Dynamic calculated total supply 21 Million
 
     return res.status(200).json({ success: true, data: formatted, error: null });
   } catch (err) {
@@ -107,6 +112,9 @@ export async function updateCryptoSettings(req, res) {
       priceSource,
       manualPrice,
       cacheTtl,
+      manualHolders,
+      manualVolume,
+      manualMarketCap,
     } = req.body;
 
     const existing = await prisma.cryptoSetting.findFirst();
@@ -125,6 +133,9 @@ export async function updateCryptoSettings(req, res) {
       priceSource,
       manualPrice: manualPrice !== undefined ? Number(manualPrice) : undefined,
       cacheTtl: cacheTtl !== undefined ? Number(cacheTtl) : undefined,
+      manualHolders: manualHolders !== undefined ? Number(manualHolders) : undefined,
+      manualVolume: manualVolume !== undefined ? Number(manualVolume) : undefined,
+      manualMarketCap: manualMarketCap !== undefined ? Number(manualMarketCap) : undefined,
     };
 
     if (exchangeLinks) {

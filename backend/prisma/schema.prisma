@@ -187,6 +187,9 @@ model CryptoSetting {
   priceSource            String  @default("MANUAL") // COINGECKO, COINMARKETCAP, MANUAL
   manualPrice            Float   @default(0.01)
   cacheTtl               Int     @default(60)
+  manualHolders          Int     @default(1540)
+  manualVolume           Float   @default(384200)
+  manualMarketCap        Float   @default(12500000)
 }
 
 model AnalyticsEvent {

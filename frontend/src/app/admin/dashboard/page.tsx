@@ -55,6 +55,10 @@ export default function AdminDashboardPage() {
 
   // Crypto Setting Form State
   const [contractAddress, setContractAddress] = useState('');
+  const [manualPrice, setManualPrice] = useState(0.0125);
+  const [manualHolders, setManualHolders] = useState(1540);
+  const [manualVolume, setManualVolume] = useState(384200);
+  const [manualMarketCap, setManualMarketCap] = useState(12500000);
   const [cryptoSuccessMsg, setCryptoSuccessMsg] = useState<string | null>(null);
   const [cryptoErrorMsg, setCryptoErrorMsg] = useState<string | null>(null);
 
@@ -117,21 +121,25 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const settings = cryptoSettings as any;
-    if (settings?.contractAddress) {
-      setContractAddress(settings.contractAddress);
+    if (settings) {
+      if (settings.contractAddress) setContractAddress(settings.contractAddress);
+      if (settings.manualPrice !== undefined) setManualPrice(settings.manualPrice);
+      if (settings.manualHolders !== undefined) setManualHolders(settings.manualHolders);
+      if (settings.manualVolume !== undefined) setManualVolume(settings.manualVolume);
+      if (settings.manualMarketCap !== undefined) setManualMarketCap(settings.manualMarketCap);
     }
   }, [cryptoSettings]);
 
   // Mutation: Update Crypto Settings
   const cryptoMutation = useMutation({
-    mutationFn: (newAddress: string) => adminApi.updateCryptoSettings({ contractAddress: newAddress }),
+    mutationFn: (updatedSettings: any) => adminApi.updateCryptoSettings(updatedSettings),
     onSuccess: () => {
-      setCryptoSuccessMsg('Contract address updated successfully!');
+      setCryptoSuccessMsg('Crypto settings updated successfully!');
       queryClient.invalidateQueries({ queryKey: ['cryptoSettings'] });
       setTimeout(() => setCryptoSuccessMsg(null), 3000);
     },
     onError: (err: any) => {
-      setCryptoErrorMsg(err?.message || 'Failed to update address.');
+      setCryptoErrorMsg(err?.message || 'Failed to update crypto settings.');
       setTimeout(() => setCryptoErrorMsg(null), 3000);
     },
   });
@@ -607,7 +615,7 @@ export default function AdminDashboardPage() {
                 Crypto Settings
               </h1>
               <p className="text-sm text-text-secondary mt-1">
-                Configure the dynamic Solana (SPL) contract address displayed across the platform.
+                Configure the Solana (SPL) contract address, live token price, active holders count, and 24h trading volume displayed across the platform.
               </p>
             </div>
 
@@ -628,7 +636,13 @@ export default function AdminDashboardPage() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  cryptoMutation.mutate(contractAddress);
+                  cryptoMutation.mutate({
+                    contractAddress,
+                    manualPrice: Number(manualPrice),
+                    manualHolders: Number(manualHolders),
+                    manualVolume: Number(manualVolume),
+                    manualMarketCap: Number(manualMarketCap),
+                  });
                 }}
                 className="flex flex-col gap-4"
               >
@@ -649,6 +663,70 @@ export default function AdminDashboardPage() {
                   </span>
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                      BELL Token Price (USD)
+                    </label>
+                    <input
+                      type="number"
+                      step="any"
+                      required
+                      value={manualPrice}
+                      onChange={(e) => setManualPrice(Number(e.target.value))}
+                      placeholder="0.0125"
+                      className="w-full rounded-lg bg-primary-bg/50 border border-accent-gold/15 py-3 px-4 text-sm text-text-primary font-mono focus:border-accent-gold/50 focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                      Active Holders Count
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      value={manualHolders}
+                      onChange={(e) => setManualHolders(Number(e.target.value))}
+                      placeholder="1540"
+                      className="w-full rounded-lg bg-primary-bg/50 border border-accent-gold/15 py-3 px-4 text-sm text-text-primary font-mono focus:border-accent-gold/50 focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                      24h Vol (Raydium) (USD)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      value={manualVolume}
+                      onChange={(e) => setManualVolume(Number(e.target.value))}
+                      placeholder="384200"
+                      className="w-full rounded-lg bg-primary-bg/50 border border-accent-gold/15 py-3 px-4 text-sm text-text-primary font-mono focus:border-accent-gold/50 focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                      Market Cap Override (USD)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      value={manualMarketCap}
+                      onChange={(e) => setManualMarketCap(Number(e.target.value))}
+                      placeholder="12500000"
+                      className="w-full rounded-lg bg-primary-bg/50 border border-accent-gold/15 py-3 px-4 text-sm text-text-primary font-mono focus:border-accent-gold/50 focus:outline-none transition-colors"
+                    />
+                    <span className="text-[10px] text-text-secondary/60">
+                      Set to 0 to dynamically calculate based on Price × 21M supply.
+                    </span>
+                  </div>
+                </div>
+
                 <button
                   type="submit"
                   disabled={cryptoMutation.isPending}
@@ -657,7 +735,7 @@ export default function AdminDashboardPage() {
                   {cryptoMutation.isPending ? (
                     <IconLoader2 className="h-5 w-5 animate-spin mx-auto" />
                   ) : (
-                    'Save Contract Address'
+                    'Save Crypto Settings'
                   )}
                 </button>
               </form>
