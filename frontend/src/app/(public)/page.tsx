@@ -17,6 +17,7 @@ import {
   IconBrandTelegram,
   IconBrandTwitter,
   IconBrandDiscord,
+  IconExternalLink,
 } from '@tabler/icons-react';
 
 import CoinCanvas from '@/components/CoinCanvas';
@@ -255,6 +256,53 @@ export default function HomePage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Live Trading Chart Section */}
+      <section className="py-20 px-6 max-w-7xl mx-auto border-t border-accent-gold/15">
+        <div className="text-center max-w-2xl mx-auto mb-12 flex flex-col gap-4">
+          <span className="font-display text-xs font-bold uppercase tracking-widest text-accent-gold">
+            Real-Time Market
+          </span>
+          <h2 className="font-display text-2xl md:text-4xl font-bold tracking-tight">
+            Live Trading Chart
+          </h2>
+          <p className="text-text-secondary leading-relaxed">
+            Monitor real-time price action, trades, and liquidity depth for BELL directly on our official platform.
+          </p>
+        </div>
+
+        <div className="glass-panel border-accent-gold/20 p-1.5 gold-glow rounded-2xl overflow-hidden bg-surface-glass/40">
+          <div className="relative w-full h-[550px] rounded-xl overflow-hidden bg-primary-bg/85">
+            {isCryptoLoading ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-accent-gold" />
+              </div>
+            ) : (
+              <iframe
+                src={`https://dexscreener.com/solana/${crypto?.contractAddress || '7xKX1v2B8kFqE2pAd8Ad1T2P6Sj4b3g9B1N8xQ2yZ1r9'}?embed=1&theme=dark`}
+                title="DexScreener Live Chart"
+                width="100%"
+                height="100%"
+                className="border-0 w-full h-full"
+                allow="clipboard-write"
+                allowFullScreen
+              />
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 flex justify-center gap-4">
+          <a
+            href={`https://dexscreener.com/solana/${crypto?.contractAddress || '7xKX1v2B8kFqE2pAd8Ad1T2P6Sj4b3g9B1N8xQ2yZ1r9'}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-full bg-accent-gold/15 border border-accent-gold/30 px-6 py-2.5 text-xs font-bold text-accent-gold hover:bg-accent-gold hover:text-primary-bg transition-all"
+          >
+            Open on DexScreener
+            <IconExternalLink className="h-4.5 w-4.5" />
+          </a>
         </div>
       </section>
 
