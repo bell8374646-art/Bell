@@ -7,12 +7,14 @@ node_modules/
 .next/
 **/.next/
 
-# Local databases and logs
+# Local databases, logs, and build zip archives
 *.db
 *.db-journal
 *.log
 logs/
 **/logs/
+deploy.zip
+*.zip
 
 # Env files
 .env
@@ -21,6 +23,7 @@ logs/
 .env.test.local
 .env.production.local
 **/.env*
+!**/.env.example
 
 # OS files
 .DS_Store
