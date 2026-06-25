@@ -2,7 +2,7 @@
 // Database schema configuration for Bell Coin Platform
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
